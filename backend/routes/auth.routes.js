@@ -2,6 +2,7 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import pool from "../config/db";
+import { protect } from "../middleware/auth.middleware";
 
 const router = express.Router();
 
@@ -101,7 +102,7 @@ router.post("/login", async (req, res) => {
 
 // Me
 
-router.get("/me", async (req, res) => {
+router.get("/me", protect, async (req, res) => {
   res.json(req.user);
 });
 
