@@ -54,3 +54,47 @@ router.post("/register", async (req, res) => {
     user: newUser.rows[0],
   });
 });
+
+// Login
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({
+      message: "please provide all fields",
+      success: false,
+    });
+  }
+
+  const user = await pool.query("SELECT * FROM users WHERE email = $1", [
+    email,
+  ]);
+
+  if (user.rows.length === 0) {
+    return res.status(400).json({
+      message: "Invalid credentials",
+    });
+  }
+
+  const userData = users.rows[0];
+
+  const isMatch = await bcrypt.compare(password, userData.password);
+
+  if (!isMatch) {
+    return res.status(400).json({
+      message: "Invalid credentials",
+    });
+  }
+
+  const token = generateToken(userData.id);
+  res.cookie("token", token, cookieOptions);
+
+  res.json({
+    user: {
+      id: userData.id,
+      username: userData.username,
+      email: userData.email,
+    },
+  });
+});
