@@ -104,3 +104,14 @@ router.post("/login", async (req, res) => {
 router.get("/me", async (req, res) => {
   res.json(req.user);
 });
+
+// Logout
+
+router.post("/logout", (req, res) => {
+  res.cookie("token", "", { ...cookieOptions, maxAge: 0 });
+  res.json({
+    message: "Logged out successfully!",
+  });
+});
+
+export default router;
