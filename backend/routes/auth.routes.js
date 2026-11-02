@@ -98,3 +98,9 @@ router.post("/login", async (req, res) => {
     },
   });
 });
+
+// Me
+
+router.get("/me", async (req, res) => {
+  res.json(req.user);
+});
