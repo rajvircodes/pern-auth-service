@@ -15,7 +15,7 @@ pool
   .connect()
   .then((client) => {
     console.log("Connected to database!");
-    client.release(); // Release the client back to the pool
+    client.release();
   })
   .catch((error) => {
     console.error("Database connection error", error.message);
