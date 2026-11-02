@@ -11,12 +11,18 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
 });
 
-pool.on("connect", () => {
-  console.log("Connected to database!");
-});
+pool
+  .connect()
+  .then((client) => {
+    console.log("Connected to database!");
+    client.release(); // Release the client back to the pool
+  })
+  .catch((error) => {
+    console.error("Database connection error", error.message);
+  });
 
 pool.on("error", (error) => {
-  console.log("Database connection error", error);
+  console.error("Unexpected database error on idle client", error);
 });
 
 export default pool;
